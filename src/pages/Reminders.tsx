@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Bell, Plus, Calendar, CreditCard, Car, Clock } from "lucide-react";
+import { Bell, Plus, Calendar, CreditCard, Car, Clock, Edit, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface Reminder {
@@ -34,6 +34,8 @@ const Reminders = () => {
     priority: "medium" as const,
   });
 
+  const [editingReminder, setEditingReminder] = useState<Reminder | null>(null);
+
   const addReminder = () => {
     if (newReminder.title && newReminder.date && newReminder.time) {
       const reminder: Reminder = {
@@ -45,6 +47,32 @@ const Reminders = () => {
       toast({
         title: "Amintire adăugată!",
         description: `${newReminder.title} a fost adăugată în lista de amintiri.`,
+      });
+    }
+  };
+
+  const deleteReminder = (id: string) => {
+    const reminderToDelete = reminders.find(reminder => reminder.id === id);
+    setReminders(reminders.filter(reminder => reminder.id !== id));
+    toast({
+      title: "Amintire ștearsă!",
+      description: `${reminderToDelete?.title} a fost eliminată.`,
+    });
+  };
+
+  const startEditReminder = (reminder: Reminder) => {
+    setEditingReminder({ ...reminder });
+  };
+
+  const saveEditReminder = () => {
+    if (editingReminder) {
+      setReminders(reminders.map(reminder => 
+        reminder.id === editingReminder.id ? editingReminder : reminder
+      ));
+      setEditingReminder(null);
+      toast({
+        title: "Amintire actualizată!",
+        description: `${editingReminder.title} a fost modificată.`,
       });
     }
   };
@@ -106,11 +134,11 @@ const Reminders = () => {
             <Card key={reminder.id} className="hover:shadow-md transition-all duration-300">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-3">
+                  <div className="flex items-start space-x-3 flex-1">
                     <div className="p-2 bg-gray-100 rounded-lg">
                       {getTypeIcon(reminder.type)}
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h3 className="font-medium mb-1">{reminder.title}</h3>
                       <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
                         <Clock className="h-4 w-4" />
@@ -126,6 +154,23 @@ const Reminders = () => {
                         </Badge>
                       </div>
                     </div>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => startEditReminder(reminder)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => deleteReminder(reminder.id)}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -216,6 +261,87 @@ const Reminders = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Edit Reminder Modal */}
+      {editingReminder && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <CardHeader>
+              <CardTitle>Editează Amintirea</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-reminder-title">Titlul amintirii</Label>
+                <Input
+                  id="edit-reminder-title"
+                  value={editingReminder.title}
+                  onChange={(e) => setEditingReminder({...editingReminder, title: e.target.value})}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-reminder-type">Tipul amintirii</Label>
+                <Select value={editingReminder.type} onValueChange={(value: any) => setEditingReminder({...editingReminder, type: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="bill">Factură</SelectItem>
+                    <SelectItem value="appointment">Întâlnire</SelectItem>
+                    <SelectItem value="parking">Parcare</SelectItem>
+                    <SelectItem value="other">Altele</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="edit-reminder-priority">Prioritatea</Label>
+                <Select value={editingReminder.priority} onValueChange={(value: any) => setEditingReminder({...editingReminder, priority: value})}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="low">Scăzută</SelectItem>
+                    <SelectItem value="medium">Normală</SelectItem>
+                    <SelectItem value="high">Urgentă</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="edit-reminder-date">Data</Label>
+                  <Input
+                    id="edit-reminder-date"
+                    type="date"
+                    value={editingReminder.date}
+                    onChange={(e) => setEditingReminder({...editingReminder, date: e.target.value})}
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="edit-reminder-time">Ora</Label>
+                  <Input
+                    id="edit-reminder-time"
+                    type="time"
+                    value={editingReminder.time}
+                    onChange={(e) => setEditingReminder({...editingReminder, time: e.target.value})}
+                  />
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button onClick={saveEditReminder} className="flex-1">
+                  Salvează
+                </Button>
+                <Button variant="outline" onClick={() => setEditingReminder(null)} className="flex-1">
+                  Anulează
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };

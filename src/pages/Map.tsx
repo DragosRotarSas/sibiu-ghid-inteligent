@@ -101,7 +101,7 @@ const Map = () => {
           <MapIcon className="h-8 w-8 text-orange-600" />
           Harta Sibiului
         </h1>
-        <p className="text-gray-600">Explorează orașul cu harta interactivă și puncte de interes</p>
+        <p className="text-gray-600">Explorează orașul cu harta simplă și puncte de interes</p>
       </div>
 
       {/* Search Bar */}
@@ -118,36 +118,36 @@ const Map = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Map Placeholder */}
+        {/* Simple Map with Static Image */}
         <div className="lg:col-span-2">
           <Card className="h-[500px]">
             <CardContent className="p-0 h-full">
-              <div className="relative h-full bg-gradient-to-br from-blue-100 to-green-100 rounded-lg flex items-center justify-center">
-                <div className="text-center">
-                  <MapIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-600 mb-2">Harta Interactivă</h3>
-                  <p className="text-gray-500 max-w-md">
-                    Aici va fi integrată harta reală cu Azure Maps pentru navigare și explorare
-                  </p>
-                  <Badge className="mt-4 bg-blue-100 text-blue-800">
-                    În curând: Integrare Azure Maps
-                  </Badge>
+              <div className="relative h-full rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=500&fit=crop&crop=center" 
+                  alt="Sibiu City Map"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/20"></div>
+                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                  <h3 className="font-semibold text-gray-800">Harta Sibiului</h3>
+                  <p className="text-sm text-gray-600">Vedere generală a centrului istoric</p>
                 </div>
                 
-                {/* Simulated Map Points */}
-                <div className="absolute inset-0 pointer-events-none">
-                  {filteredPOIs.map((poi, index) => (
-                    <div
-                      key={poi.id}
-                      className="absolute w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg animate-bounce"
-                      style={{
-                        left: `${20 + index * 15}%`,
-                        top: `${30 + (index % 3) * 20}%`,
-                        animationDelay: `${index * 0.2}s`
-                      }}
-                    />
-                  ))}
-                </div>
+                {/* Simulated Interactive Points */}
+                {filteredPOIs.slice(0, 4).map((poi, index) => (
+                  <button
+                    key={poi.id}
+                    className="absolute w-6 h-6 bg-red-500 rounded-full border-2 border-white shadow-lg hover:scale-110 transition-transform cursor-pointer flex items-center justify-center"
+                    style={{
+                      left: `${25 + index * 18}%`,
+                      top: `${35 + (index % 2) * 25}%`,
+                    }}
+                    onClick={() => setSelectedPOI(poi)}
+                  >
+                    <MapPin className="h-3 w-3 text-white" />
+                  </button>
+                ))}
               </div>
             </CardContent>
           </Card>

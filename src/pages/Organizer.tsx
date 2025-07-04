@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Plus, Clock, Repeat } from "lucide-react";
+import { Calendar, Plus, Clock, Repeat, Edit, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface Task {
@@ -27,6 +27,7 @@ const Organizer = () => {
   ]);
 
   const [newTask, setNewTask] = useState({ title: "", time: "" });
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const addTask = () => {
     if (newTask.title && newTask.time) {
@@ -50,6 +51,32 @@ const Organizer = () => {
     setTasks(tasks.map(task => 
       task.id === id ? { ...task, completed: !task.completed } : task
     ));
+  };
+
+  const deleteTask = (id: string) => {
+    const taskToDelete = tasks.find(task => task.id === id);
+    setTasks(tasks.filter(task => task.id !== id));
+    toast({
+      title: "Activitate ștearsă!",
+      description: `${taskToDelete?.title} a fost eliminată din program.`,
+    });
+  };
+
+  const startEditTask = (task: Task) => {
+    setEditingTask({ ...task });
+  };
+
+  const saveEditTask = () => {
+    if (editingTask) {
+      setTasks(tasks.map(task => 
+        task.id === editingTask.id ? editingTask : task
+      ));
+      setEditingTask(null);
+      toast({
+        title: "Activitate actualizată!",
+        description: `${editingTask.title} a fost modificată.`,
+      });
+    }
   };
 
   const completedTasks = tasks.filter(task => task.completed).length;
@@ -122,6 +149,23 @@ const Organizer = () => {
                       )}
                     </div>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => startEditTask(task)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => deleteTask(task.id)}
+                      className="text-red-600 hover:text-red-700"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -166,6 +210,44 @@ const Organizer = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Edit Task Modal */}
+      {editingTask && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle>Editează Activitatea</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-title">Numele activității</Label>
+                <Input
+                  id="edit-title"
+                  value={editingTask.title}
+                  onChange={(e) => setEditingTask({...editingTask, title: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-time">Ora</Label>
+                <Input
+                  id="edit-time"
+                  type="time"
+                  value={editingTask.time}
+                  onChange={(e) => setEditingTask({...editingTask, time: e.target.value})}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button onClick={saveEditTask} className="flex-1">
+                  Salvează
+                </Button>
+                <Button variant="outline" onClick={() => setEditingTask(null)} className="flex-1">
+                  Anulează
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
