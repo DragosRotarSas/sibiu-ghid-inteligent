@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Bell, MessageCircle, Map } from "lucide-react";
+import { Calendar, Bell, MessageCircle, Map, Shield, MapPin, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Index = () => {
@@ -22,8 +22,8 @@ const Index = () => {
     },
     {
       icon: MessageCircle,
-      title: "Rezervări prin Chat",
-      description: "Fă rezervări la restaurante prin conversație naturală",
+      title: "Chat cu Iris",
+      description: "Conversează cu Iris pentru rezervări și asistență personalizată",
       link: "/chat",
       color: "text-purple-600",
     },
@@ -34,6 +34,27 @@ const Index = () => {
       link: "/map", 
       color: "text-orange-600",
     },
+    {
+      icon: Shield,
+      title: "Securitate Seniori",
+      description: "Buton SOS, monitorizare activitate și mementouri pentru medicamente",
+      link: "/security",
+      color: "text-red-600",
+    },
+    {
+      icon: MapPin,
+      title: "Oraș Inteligent",
+      description: "Raportează probleme locale și descoperă evenimente din comunitate",
+      link: "/smart-city",
+      color: "text-cyan-600",
+    },
+    {
+      icon: Trash2,
+      title: "Gunoi Inteligent",
+      description: "Mementouri personalizate pentru colectarea gunoiului selectiv",
+      link: "/waste",
+      color: "text-amber-600",
+    },
   ];
 
   return (
@@ -42,7 +63,7 @@ const Index = () => {
       <section className="px-4 py-12 md:py-20">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 animate-fade-in">
-            🤖 Asistentul Tău Personal
+            🤖 Iris - Asistentul Tău Personal
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in">
             Organizează-ți viața zilnică cu ajutorul inteligenței artificiale. 
@@ -53,7 +74,7 @@ const Index = () => {
               <Link to="/organizer">Începe Acum</Link>
             </Button>
             <Button size="lg" variant="outline" asChild className="text-lg px-8 py-6">
-              <Link to="/chat">Încearcă Chat-ul</Link>
+              <Link to="/chat">Vorbește cu Iris</Link>
             </Button>
           </div>
         </div>
@@ -65,7 +86,7 @@ const Index = () => {
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
             Funcționalități Principale
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <Card key={feature.title} className="hover:shadow-lg transition-all duration-300 hover:scale-105 animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
                 <CardHeader>
@@ -92,7 +113,7 @@ const Index = () => {
       <section className="px-4 py-12 bg-white/50">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-8 text-gray-900">
-            De ce să alegi Asistentul Tău Personal?
+            De ce să alegi Iris?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="animate-fade-in">

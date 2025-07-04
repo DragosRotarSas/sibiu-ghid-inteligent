@@ -11,6 +11,9 @@ import Organizer from "./pages/Organizer";
 import Reminders from "./pages/Reminders";
 import Chat from "./pages/Chat";
 import Map from "./pages/Map";
+import Security from "./pages/Security";
+import SmartCity from "./pages/SmartCity";
+import Waste from "./pages/Waste";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +31,9 @@ const App = () => (
             <Route path="/reminders" element={<Layout><Reminders /></Layout>} />
             <Route path="/chat" element={<Layout><Chat /></Layout>} />
             <Route path="/map" element={<Layout><Map /></Layout>} />
+            <Route path="/security" element={<Layout><Security /></Layout>} />
+            <Route path="/smart-city" element={<Layout><SmartCity /></Layout>} />
+            <Route path="/waste" element={<Layout><Waste /></Layout>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </SidebarProvider>
