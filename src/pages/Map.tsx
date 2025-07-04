@@ -1,21 +1,11 @@
+
 import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Map as MapIcon, Navigation, Search, MapPin, Star } from "lucide-react";
+import { Map as MapIcon, Navigation, Search, MapPin, Star, Clock } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-
-// Fix for default markers
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
 
 interface PointOfInterest {
   id: string;
@@ -128,50 +118,36 @@ const Map = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Interactive Map with OpenStreetMap */}
+        {/* Simple Map with Static Image */}
         <div className="lg:col-span-2">
           <Card className="h-[500px]">
             <CardContent className="p-0 h-full">
-              <div className="h-full rounded-lg overflow-hidden">
-                <MapContainer
-                  center={[45.7983, 24.1256]}
-                  zoom={15}
-                  className="h-full w-full"
-                  zoomControl={true}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                  {filteredPOIs.map((poi) => (
-                    <Marker
-                      key={poi.id}
-                      position={[poi.coordinates.lat, poi.coordinates.lng]}
-                      eventHandlers={{
-                        click: () => setSelectedPOI(poi),
-                      }}
-                    >
-                      <Popup>
-                        <div className="p-2">
-                          <h3 className="font-semibold text-sm">{poi.name}</h3>
-                          <p className="text-xs text-gray-600 mb-1">{poi.category}</p>
-                          <div className="flex items-center text-xs mb-2">
-                            <Star className="h-3 w-3 text-yellow-500 mr-1" />
-                            {poi.rating}
-                          </div>
-                          <Button
-                            size="sm"
-                            className="text-xs h-6"
-                            onClick={() => startNavigation(poi)}
-                          >
-                            <Navigation className="h-3 w-3 mr-1" />
-                            Navighează
-                          </Button>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  ))}
-                </MapContainer>
+              <div className="relative h-full rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=500&fit=crop&crop=center" 
+                  alt="Sibiu City Map"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/20"></div>
+                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                  <h3 className="font-semibold text-gray-800">Harta Sibiului</h3>
+                  <p className="text-sm text-gray-600">Vedere generală a centrului istoric</p>
+                </div>
+                
+                {/* Simulated Interactive Points */}
+                {filteredPOIs.slice(0, 4).map((poi, index) => (
+                  <button
+                    key={poi.id}
+                    className="absolute w-6 h-6 bg-red-500 rounded-full border-2 border-white shadow-lg hover:scale-110 transition-transform cursor-pointer flex items-center justify-center"
+                    style={{
+                      left: `${25 + index * 18}%`,
+                      top: `${35 + (index % 2) * 25}%`,
+                    }}
+                    onClick={() => setSelectedPOI(poi)}
+                  >
+                    <MapPin className="h-3 w-3 text-white" />
+                  </button>
+                ))}
               </div>
             </CardContent>
           </Card>
